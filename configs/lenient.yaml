@@ -1,0 +1,95 @@
+# PS-03 Lenient Configuration (For Untrained Embeddings)
+# ========================================================
+
+# LOWER THRESHOLDS for better recall with untrained model
+
+data:
+  training_set: "data/training_set"
+  testing_set: "data/testing_set"
+  sample_set: "data/sample_set"
+  chips: "chips"
+  cache: "cache"
+  outputs: "outputs/runs"
+
+preprocessing:
+  normalization: "percentile"
+  percentile_clip: [2, 98]
+  histogram_match: false
+  target_dtype: "float32"
+
+tiler:
+  tile_size: 512
+  stride: 256
+  scales: [1.0, 0.75, 1.33]
+  min_overlap: 0.5
+
+embedder:
+  architecture: "resnet18"
+  input_channels: 4
+  embedding_dim: 256
+  pretrained: false
+  checkpoint: null
+  normalize_embeddings: true
+
+faiss:
+  index_type: "Flat"
+  metric: "cosine"
+  nlist: 100
+  nprobe: 10
+
+# CRITICAL: LOWERED THRESHOLDS
+retrieval:
+  top_k_per_chip: 2000      # Increased from 1000
+  top_k_per_image: 500      # Increased from 200
+  similarity_threshold: 0.1  # LOWERED from 0.5 (critical!)
+
+scoring:
+  use_embedder: true
+  use_zncc: true
+  zncc_weight: 0.5          # Equal weight
+  confidence_threshold: 0.2  # LOWERED from 0.5
+
+nms:
+  iou_threshold: 0.3
+  score_threshold: 0.15      # LOWERED from 0.4 (critical!)
+  method: "soft"
+  sigma: 0.5
+
+training:
+  batch_size: 32
+  num_epochs: 50
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  optimizer: "adam"
+  scheduler: "cosine"
+  loss: "triplet"
+  margin: 0.5
+  mining: "batch_hard"
+  augmentation:
+    random_flip: 0.5
+    random_rotate: 0.3
+    random_brightness: 0.2
+    random_contrast: 0.2
+    random_crop: 0.0
+  save_every: 5
+  checkpoint_dir: "models/checkpoints"
+  best_metric: "map"
+  val_split: 0.2
+  val_every: 1
+
+evaluation:
+  metrics: ["map", "recall", "precision"]
+  iou_thresholds: [0.5, 0.75, 0.9]
+
+output:
+  format: "space_delimited"
+  filename_template: "GC_PS03_{date}_AIGR-S47377.txt"
+  team_name: "AIGR-S47377"
+  columns: ["x_min", "y_min", "x_max", "y_max", "class_name", "target_filename", "score"]
+  score_default: -1
+
+system:
+  device: "cuda"
+  num_workers: 4
+  seed: 42
+  verbose: true

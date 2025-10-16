@@ -1,0 +1,111 @@
+================================================================================
+                    🚨 FASTEST FIX - 2 MINUTES
+================================================================================
+
+The data files are stuck in git history. Here's the FASTEST solution:
+
+================================================================================
+
+⚡ OPTION 1: FORCE CLEAN (Recommended - 2 min)
+===============================================
+
+Run these commands:
+
+cd c:\Users\meeth\OneDrive\Desktop\DPIIT\new_ps03
+
+git filter-branch -f --index-filter "git rm -rf --cached --ignore-unmatch data/ chips/ cache/ outputs/" HEAD
+git push origin main --force
+
+DONE! ✅
+
+================================================================================
+
+⚡ OPTION 2: EVEN FASTER - Just run this file:
+==============================================
+
+Double-click: FIX_NOW_FORCE.bat
+
+Wait 2 minutes, done!
+
+================================================================================
+
+⚡ OPTION 3: SKIP GITHUB - Go Direct to Kaggle (5 min)
+=======================================================
+
+Forget GitHub! Upload everything to Kaggle:
+
+1. Go to: https://www.kaggle.com/datasets
+2. Create ONE dataset: "ps03-complete"
+3. Upload entire new_ps03 folder (with data)
+4. In Kaggle notebook:
+   !cp -r /kaggle/input/ps03-complete/* .
+   !python scripts/batch_extract_chips.py ...
+   (rest of code same)
+
+This avoids GitHub entirely!
+
+================================================================================
+
+🎯 MY RECOMMENDATION (3 min total)
+==================================
+
+SKIP GITHUB! Just use Kaggle:
+
+1. Go to Kaggle datasets
+2. Upload 3 folders:
+   - ps03-sample-set → data/sample_set/
+   - ps03-training-set → data/training_set/
+   - ps03-testing-set → data/testing_set/
+
+3. Manually copy your scripts to Kaggle notebook cells
+
+4. Run!
+
+NO GITHUB NEEDED for submission!
+
+================================================================================
+
+📋 KAGGLE-ONLY WORKFLOW (Fastest!)
+===================================
+
+Just paste this in Kaggle notebook:
+
+# Install
+!pip install -q rasterio faiss-gpu opencv-python-headless scikit-image pyyaml
+
+# Link datasets  
+!mkdir -p data scripts engine configs
+!ln -s /kaggle/input/ps03-sample-set data/sample_set
+!ln -s /kaggle/input/ps03-training-set data/training_set
+!ln -s /kaggle/input/ps03-testing-set data/testing_set
+
+# Copy your code files to notebook OR upload as dataset
+# Then run workflow commands
+
+================================================================================
+
+⏱️ TIME COMPARISON
+==================
+
+Fix GitHub (Option 1):  2 min + 5 min upload = 7 min
+Fix GitHub (Option 2):  2 min + 5 min upload = 7 min  
+Skip GitHub (Option 3): 5 min upload only = 5 min ✅ FASTEST!
+
+================================================================================
+
+🎯 BOTTOM LINE
+==============
+
+You have 4 hours left. Don't waste time fighting GitHub!
+
+JUST:
+1. Upload data to Kaggle (5 min)
+2. Copy code to notebook (manual, 5 min)
+3. Run (10 min)
+4. Submit!
+
+Total: 20 minutes ✅
+
+OR use Option 1 to fix GitHub if you want.
+
+================================================================================

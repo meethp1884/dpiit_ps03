@@ -49,6 +49,9 @@ models/checkpoints/*.pth
 *.tiff
 *.TIF
 *.TIFF
+*.zip
+*.tar.gz
+*.rar
 
 # Logs
 *.log

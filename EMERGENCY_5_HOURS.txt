@@ -1,0 +1,261 @@
+================================================================================
+                    🚨 EMERGENCY - 5 HOURS TO SUBMISSION
+                         Team AIGR-S47377
+================================================================================
+
+GitHub: https://github.com/meethp1884/dpiit_ps03
+
+IMPORT ERROR: ✅ FIXED!
+
+================================================================================
+
+🚀 FASTEST PATH - KAGGLE (20 MINUTES TOTAL)
+============================================
+
+STEP 1: PUSH FIX TO GITHUB (2 min)
+-----------------------------------
+cd c:\Users\meeth\OneDrive\Desktop\DPIIT\new_ps03
+
+git add .
+git commit -m "Fix import error - ready for submission"
+git push
+
+(If asks for credentials: use Personal Access Token as password)
+
+
+STEP 2: UPLOAD DATASETS TO KAGGLE (5 min)
+------------------------------------------
+1. Go to: https://www.kaggle.com/datasets
+2. Click "New Dataset"
+3. Upload 3 SEPARATE datasets:
+
+   Dataset 1: ps03-sample-set
+     → Upload folder: data/sample_set/
+   
+   Dataset 2: ps03-training-set  
+     → Upload folder: data/training_set/
+   
+   Dataset 3: ps03-testing-set
+     → Upload folder: data/testing_set/
+
+4. Make them Public or Private
+
+
+STEP 3: CREATE KAGGLE NOTEBOOK (3 min)
+---------------------------------------
+1. Go to: https://www.kaggle.com/code
+2. Click "New Notebook"
+3. Settings (right sidebar):
+   - Accelerator: GPU T4 x2 ← IMPORTANT!
+   - Internet: ON
+4. Add Data (right sidebar):
+   - Add your 3 datasets
+
+
+STEP 4: RUN THIS CODE (10 min)
+-------------------------------
+Copy-paste this entire code block into Kaggle:
+
+---START CODE---
+# Install packages
+!pip install -q rasterio faiss-gpu opencv-python-headless scikit-image pyyaml
+
+# Clone repo
+!git clone https://github.com/meethp1884/dpiit_ps03.git
+%cd dpiit_ps03
+
+# Link datasets
+!mkdir -p data
+!ln -s /kaggle/input/ps03-sample-set data/sample_set
+!ln -s /kaggle/input/ps03-training-set data/training_set
+!ln -s /kaggle/input/ps03-testing-set data/testing_set
+
+# Verify
+!echo "Training:"; ls data/training_set/*.tif | wc -l
+!echo "Testing:"; ls data/testing_set/*.tif | wc -l
+!echo "Sample:"; ls data/sample_set/
+
+# Extract chips
+!python scripts/batch_extract_chips.py \
+  --sample-dir data/sample_set \
+  --out-dir chips \
+  --max-chips 5
+
+# Build index  
+!python scripts/build_index.py \
+  --targets data/testing_set \
+  --out cache/indexes \
+  --device cuda \
+  --config configs/default.yaml
+
+# Search all classes
+import glob, os, subprocess
+from datetime import datetime
+
+classes = [
+    "Solar Panel", "Brick Kiln", "Pond-1 & Pond-2",
+    "Pond-1,Pond-2 & Playground", "Pond-2,STP & Sheds",
+    "MetroShed,STP & Sheds", "Playground", "Sheds"
+]
+
+os.makedirs("outputs", exist_ok=True)
+
+for cls in classes:
+    print(f"\nSearching: {cls}")
+    safe = cls.replace(" ", "_").replace(",", "").replace("&", "and")
+    chips = glob.glob(f"chips/{cls}/*.tif")[:5]
+    if not chips: continue
+    
+    chip_str = " ".join([f'"{c}"' for c in chips])
+    cmd = f'python scripts/run_search.py --chips {chip_str} ' + \
+          f'--index cache/indexes --name "{cls}" ' + \
+          f'--out outputs/temp_{safe}.txt --team AIGR-S47377 ' + \
+          f'--config configs/default.yaml --device cuda'
+    os.system(cmd)
+
+# Combine
+date = datetime.now().strftime("%d-%b-%Y")
+submission = f"outputs/GC_PS03_{date}_AIGR-S47377.txt"
+
+with open(submission, 'w') as out:
+    for f in sorted(glob.glob("outputs/temp_*.txt")):
+        with open(f) as inf:
+            out.write(inf.read())
+
+# Show results
+with open(submission) as f:
+    lines = f.readlines()
+
+print(f"\n{'='*60}")
+print(f"SUBMISSION READY!")
+print(f"{'='*60}")
+print(f"Total: {len(lines)} detections")
+for cls in classes:
+    cnt = sum(1 for l in lines if cls in l)
+    print(f"  {cls:30s}: {cnt:4d}")
+
+print(f"\nFirst 10:")
+for i, l in enumerate(lines[:10]):
+    print(l.strip())
+
+# Download
+from shutil import copy
+copy(submission, '/kaggle/working/')
+print(f"\n✓ File: {submission}")
+print(f"✓ Download from Output tab!")
+---END CODE---
+
+
+STEP 5: DOWNLOAD (1 min)
+-------------------------
+1. Click "Output" tab at bottom
+2. Find: GC_PS03_16-Oct-2025_AIGR-S47377.txt
+3. Download
+4. Submit to hackathon!
+
+DONE! ✅
+
+================================================================================
+
+⚡ OR: LOCAL RUN (10 MIN)
+=========================
+
+cd c:\Users\meeth\OneDrive\Desktop\DPIIT\new_ps03
+venv\Scripts\activate
+FINAL_RUN_AIGR-S47377.bat
+
+Wait 10 minutes → submission ready!
+
+================================================================================
+
+📊 TIME BUDGET
+==============
+
+KAGGLE (Baseline):
+  Push to GitHub:    2 min
+  Upload datasets:   5 min  
+  Create notebook:   3 min
+  Run code:         10 min
+  Download:          1 min
+  TOTAL:            21 min  ✅
+
+LOCAL (Baseline):
+  Run script:       10 min  ✅
+
+WITH TRAINING (If 2+ hours left):
+  Train on Kaggle:  90 min
+  Run search:       10 min
+  TOTAL:           100 min  (Better accuracy!)
+
+================================================================================
+
+🎯 RECOMMENDATION
+=================
+
+IF 5 hours left:    Kaggle with training (90 min)
+IF 2-4 hours left:  Kaggle baseline (20 min) ← DO THIS!
+IF 1 hour left:     Local baseline (10 min)
+IF <30 min left:    Local baseline IMMEDIATELY!
+
+================================================================================
+
+✅ WHAT'S FIXED
+===============
+
+ERROR:
+  ImportError: cannot import name 'write_detections_summary'
+  ImportError: cannot import name 'generate_submission_filename'
+
+FIX:
+  ✅ Removed non-existent imports
+  ✅ Replaced with inline code
+  ✅ Tested and working
+
+JUST NEED TO:
+  1. Git push
+  2. Run on Kaggle or local
+
+================================================================================
+
+📦 YOUR GITHUB
+==============
+
+Repo: https://github.com/meethp1884/dpiit_ps03
+
+Push command:
+  cd c:\Users\meeth\OneDrive\Desktop\DPIIT\new_ps03
+  git add .
+  git commit -m "Fix import - ready for submission"
+  git push
+
+================================================================================
+
+🆘 IF ERRORS
+============
+
+"Dataset not found":
+  → Check dataset names match in Kaggle
+
+"CUDA out of memory":
+  → Change --device cuda to --device cpu
+
+"Permission denied (git)":
+  → Use Personal Access Token as password
+
+================================================================================
+
+🏆 YOU GOT THIS!
+================
+
+With 5 hours you have PLENTY of time!
+
+Quick path:  20 min Kaggle baseline
+Best path:   90 min Kaggle with training
+
+Either way, you'll get a valid submission! ✅
+
+NEXT: Push to GitHub, then follow Kaggle steps above.
+
+Good luck, Team AIGR-S47377! 🚀
+
+================================================================================

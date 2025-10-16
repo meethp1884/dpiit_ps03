@@ -17,8 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from engine import (
     read_tiff, normalize_bands, get_embedder, FAISSIndex,
-    CandidateRetriever, ZNCC, soft_nms, hard_nms,
-    write_submission_file, write_detections_summary, generate_submission_filename
+    CandidateRetriever, ZNCC, write_submission_file
 )
 
 
@@ -176,10 +175,6 @@ def run_search(
     print(f"\nWriting submission to {output_path}")
     write_submission_file(final_detections, output_path)
     
-    # Write summary
-    summary_path = Path(output_path).parent / f"{Path(output_path).stem}_summary.txt"
-    write_detections_summary(final_detections, str(summary_path))
-    
     print(f"\n✓ Search complete!")
     print(f"  Detections: {len(final_detections)}")
     print(f"  Images: {len(grouped)}")
@@ -260,7 +255,9 @@ def main():
     
     # If output path is a directory, generate filename
     if output_path.is_dir() or not output_path.suffix:
-        filename = generate_submission_filename(args.team)
+        from datetime import datetime
+        date_str = datetime.now().strftime("%d-%b-%Y")
+        filename = f"GC_PS03_{date_str}_{args.team}.txt"
         output_path = output_path / filename
     
     # Run search

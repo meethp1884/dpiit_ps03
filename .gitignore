@@ -33,17 +33,22 @@ ENV/
 *.swo
 *~
 
-# Data & outputs
-data/training_set/*.tif
-data/testing_set/*.tif
-data/sample_set/*.tif
-data/short_listing_set/*.tif
-cache/*.npy
-cache/*.index
-cache/*.pkl
-outputs/runs/*/
+# Data & outputs - EXCLUDE ALL DATA FILES!
+data/training_set/
+data/testing_set/
+data/sample_set/
+data/short_listing_set/
+data/mock_set/
+data/sample-set/
+chips/
+cache/
+outputs/
 models/checkpoints/*.pth
 *.h5
+*.tif
+*.tiff
+*.TIF
+*.TIFF
 
 # Logs
 *.log

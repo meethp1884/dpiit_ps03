@@ -1,0 +1,114 @@
+# PS-03 Default Configuration
+# ==========================
+
+# Data paths (relative to repo root)
+data:
+  training_set: "data/training_set"
+  testing_set: "data/testing_set"
+  sample_set: "data/sample_set"
+  short_listing_set: "data/short_listing_set"
+  chips: "chips"
+  cache: "cache"
+  outputs: "outputs/runs"
+
+# Image preprocessing
+preprocessing:
+  # Normalization method: "percentile", "minmax", "standard"
+  normalization: "percentile"
+  percentile_clip: [2, 98]  # Lower and upper percentiles
+  histogram_match: false
+  target_dtype: "float32"
+
+# Tiler configuration
+tiler:
+  tile_size: 512  # Base tile size (pixels) - Optimized for accuracy
+  stride: 256     # Sliding window stride (50% overlap)
+  scales: [1.0, 0.75, 1.33]  # Multi-scale factors
+  min_overlap: 0.5  # Minimum overlap for merging tiles
+
+# Embedder (CNN) configuration
+embedder:
+  architecture: "resnet18"  # "resnet18", "resnet34", "custom_cnn"
+  input_channels: 4  # B, G, R, NIR
+  embedding_dim: 256
+  pretrained: false  # No ImageNet pretrain for 4-channel
+  checkpoint: null  # Path to trained checkpoint
+  normalize_embeddings: true  # L2 normalize output
+
+# FAISS index configuration
+faiss:
+  index_type: "Flat"  # "Flat" for exact search, "IVF" for approximate
+  metric: "cosine"  # "cosine" or "l2"
+  nlist: 100  # Number of clusters for IVF
+  nprobe: 10  # Number of clusters to search (IVF only)
+
+# Candidate retrieval
+retrieval:
+  top_k_per_chip: 1000  # Top-K tiles per query chip - Increased for better recall
+  top_k_per_image: 200  # Top-K tiles per target image
+  similarity_threshold: 0.5  # Minimum similarity score - Lowered for better recall
+
+# Verification scoring
+scoring:
+  use_embedder: true
+  use_zncc: true  # Use ZNCC as fallback/complement
+  zncc_weight: 0.3  # Weight for ZNCC score (1-weight for embedder)
+  confidence_threshold: 0.5
+
+# Post-processing
+nms:
+  iou_threshold: 0.3  # IoU threshold for soft NMS - Optimized for dense objects
+  score_threshold: 0.4  # Minimum score to keep detection
+  method: "soft"  # "soft" or "hard"
+  sigma: 0.5  # Gaussian sigma for soft NMS
+
+# Training configuration
+training:
+  batch_size: 32
+  num_epochs: 50
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  optimizer: "adam"
+  scheduler: "cosine"  # "cosine", "step", "none"
+  
+  # Loss configuration
+  loss: "triplet"  # "triplet" or "contrastive"
+  margin: 0.5  # Triplet margin
+  mining: "batch_hard"  # "batch_hard", "batch_all", "online"
+  
+  # Data augmentation
+  augmentation:
+    random_flip: 0.5
+    random_rotate: 0.3
+    random_brightness: 0.2
+    random_contrast: 0.2
+    random_crop: 0.0
+  
+  # Checkpointing
+  save_every: 5  # Save checkpoint every N epochs
+  checkpoint_dir: "models/checkpoints"
+  best_metric: "map"  # Metric to track for best model
+  
+  # Validation
+  val_split: 0.2
+  val_every: 1  # Validate every N epochs
+
+# Evaluation
+evaluation:
+  metrics: ["map", "recall", "precision"]
+  iou_thresholds: [0.5, 0.75, 0.9]
+
+# Output format (PS-03 submission)
+output:
+  format: "space_delimited"
+  filename_template: "GC_PS03_{date}_AIGR-S47377.txt"
+  team_name: "AIGR-S47377"  # Official team name
+  columns: ["x_min", "y_min", "x_max", "y_max", "class_name", "target_filename", "score"]
+  score_default: -1  # Default score if not applicable
+
+# System
+system:
+  device: "cuda"  # "cuda" or "cpu"
+  num_workers: 4
+  seed: 42
+  verbose: true

@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./cache:/app/cache
+      - ./outputs:/app/outputs
+      - ./models:/app/models
+      - ./chips:/app/chips
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python api/main.py
+
+  ui:
+    image: node:16-alpine
+    working_dir: /app
+    volumes:
+      - ./ui:/app
+    ports:
+      - "3000:3000"
+    command: sh -c "npm install && npm start"
+    depends_on:
+      - api

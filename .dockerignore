@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Data
+data/training_set/*.tif
+data/testing_set/*.tif
+data/sample_set/*.tif
+cache/*.npy
+cache/*.index
+outputs/
+
+# Node
+node_modules/
+ui/build/
+ui/dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Docs
+*.md
+!README.md

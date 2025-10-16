@@ -1,0 +1,129 @@
+================================================================================
+PS-03 QUICK COMMAND REFERENCE - Team AIGR-S47377
+================================================================================
+
+FASTEST WAY (RECOMMENDED):
+-------------------------
+cd c:\Users\meeth\OneDrive\Desktop\DPIIT\new_ps03
+FINAL_RUN_AIGR-S47377.bat
+
+(Wait 25-35 minutes, then submission file will open automatically)
+
+================================================================================
+
+ONE-TIME SETUP (If not done yet):
+---------------------------------
+cd c:\Users\meeth\OneDrive\Desktop\DPIIT\new_ps03
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+
+================================================================================
+
+MANUAL WORKFLOW (Step-by-step):
+--------------------------------
+
+1. ACTIVATE ENVIRONMENT:
+   venv\Scripts\activate
+
+2. EXTRACT CHIPS:
+   python scripts\batch_extract_chips.py --sample-dir data\sample_set --out-dir chips --max-chips 5 --padding 20
+
+3. BUILD INDEX:
+   python scripts\build_index.py --targets data\testing_set --out cache\indexes --config configs\default.yaml --device cpu
+
+4. SEARCH ALL CLASSES (Run each):
+   
+   python scripts\run_search.py --chips "chips\Solar Panel\chip_01.tif" "chips\Solar Panel\chip_02.tif" --index cache\indexes --name "Solar Panel" --out outputs\temp_solar_panel.txt --team AIGR-S47377 --config configs\default.yaml
+   
+   python scripts\run_search.py --chips "chips\Brick Kiln\chip_01.tif" --index cache\indexes --name "Brick Kiln" --out outputs\temp_brick_kiln.txt --team AIGR-S47377 --config configs\default.yaml
+   
+   python scripts\run_search.py --chips "chips\Pond-1 & Pond-2\chip_01.tif" --index cache\indexes --name "Pond-1 & Pond-2" --out outputs\temp_pond_1_2.txt --team AIGR-S47377 --config configs\default.yaml
+   
+   python scripts\run_search.py --chips "chips\Pond-1,Pond-2 & Playground\chip_01.tif" --index cache\indexes --name "Pond-1,Pond-2 & Playground" --out outputs\temp_pond_playground.txt --team AIGR-S47377 --config configs\default.yaml
+   
+   python scripts\run_search.py --chips "chips\Pond-2,STP & Sheds\chip_01.tif" --index cache\indexes --name "Pond-2,STP & Sheds" --out outputs\temp_pond_stp_sheds.txt --team AIGR-S47377 --config configs\default.yaml
+   
+   python scripts\run_search.py --chips "chips\MetroShed,STP & Sheds\chip_01.tif" --index cache\indexes --name "MetroShed,STP & Sheds" --out outputs\temp_metro_stp_sheds.txt --team AIGR-S47377 --config configs\default.yaml
+   
+   python scripts\run_search.py --chips "chips\Playground\chip_01.tif" --index cache\indexes --name "Playground" --out outputs\temp_playground.txt --team AIGR-S47377 --config configs\default.yaml
+   
+   python scripts\run_search.py --chips "chips\Sheds\chip_01.tif" --index cache\indexes --name "Sheds" --out outputs\temp_sheds.txt --team AIGR-S47377 --config configs\default.yaml
+
+5. COMBINE INTO ONE FILE:
+   copy /B outputs\temp_solar_panel.txt + outputs\temp_brick_kiln.txt + outputs\temp_pond_1_2.txt + outputs\temp_pond_playground.txt + outputs\temp_pond_stp_sheds.txt + outputs\temp_metro_stp_sheds.txt + outputs\temp_playground.txt + outputs\temp_sheds.txt outputs\GC_PS03_16-Oct-2025_AIGR-S47377.txt
+
+6. CLEAN TEMP FILES:
+   del /Q outputs\temp_*.txt
+
+7. VIEW RESULTS:
+   notepad outputs\GC_PS03_16-Oct-2025_AIGR-S47377.txt
+
+================================================================================
+
+FINAL OUTPUT FILE:
+-----------------
+outputs\GC_PS03_16-Oct-2025_AIGR-S47377.txt
+
+FORMAT:
+-------
+x_min y_min x_max y_max class_name target_filename score
+
+EXAMPLE:
+--------
+159 797 331 853 Solar Panel GC01PS03T0013 0.923456
+256 384 512 640 Brick Kiln GC01PS03T0027 0.856789
+100 200 300 400 Pond-1 & Pond-2 GC01PS03T0029 0.834567
+
+================================================================================
+
+VERIFICATION:
+------------
+REM Count total detections
+find /C "" < outputs\GC_PS03_16-Oct-2025_AIGR-S47377.txt
+
+REM Count per class
+findstr "Solar Panel" outputs\GC_PS03_16-Oct-2025_AIGR-S47377.txt | find /C ""
+findstr "Brick Kiln" outputs\GC_PS03_16-Oct-2025_AIGR-S47377.txt | find /C ""
+findstr "Pond" outputs\GC_PS03_16-Oct-2025_AIGR-S47377.txt | find /C ""
+
+================================================================================
+
+TIMELINE:
+--------
+Setup (one-time): 5 min
+Extract chips:    2 min
+Build index:      5-10 min (CPU) / 2 min (GPU)
+Search 8 classes: 10-15 min
+Combine:          10 sec
+TOTAL:            25-35 min
+
+================================================================================
+
+CONFIGURED SETTINGS (Optimized for accuracy):
+---------------------------------------------
+✓ Team Name: AIGR-S47377
+✓ Tile Size: 512 pixels
+✓ Stride: 256 pixels (50% overlap)
+✓ Top-K: 1000 candidates
+✓ NMS Threshold: 0.3
+✓ Score Threshold: 0.4
+✓ Output: ONE combined file
+✓ Format: PS-03 standard (space-delimited)
+
+================================================================================
+
+READY TO SUBMIT:
+---------------
+outputs\GC_PS03_16-Oct-2025_AIGR-S47377.txt
+
+✓ All 8 classes included
+✓ PS-03 format compliant
+✓ Team name embedded
+✓ Ready for hackathon portal
+
+================================================================================
+
+GOOD LUCK, TEAM AIGR-S47377! 🚀
+
+================================================================================

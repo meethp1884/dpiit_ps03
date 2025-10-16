@@ -1,0 +1,72 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Data & outputs
+data/training_set/*.tif
+data/testing_set/*.tif
+data/sample_set/*.tif
+data/short_listing_set/*.tif
+cache/*.npy
+cache/*.index
+cache/*.pkl
+outputs/runs/*/
+models/checkpoints/*.pth
+*.h5
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (for React UI)
+node_modules/
+ui/build/
+ui/dist/
+ui/.next/
+ui/npm-debug.log*
+ui/yarn-debug.log*
+ui/yarn-error.log*
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Temporary
+tmp/
+temp/
+*.tmp
